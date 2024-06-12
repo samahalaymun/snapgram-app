@@ -21,8 +21,6 @@ import {
 import { ProfileValidation } from "@/lib/validation";
 import { IUpdateUser } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { log } from "console";
-
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import * as z from "zod";
@@ -58,7 +56,7 @@ function UpdateProfile() {
     values: userToUpdate,
   });
   // Queries
-  console.log(currentUser);
+ 
  
   if (!currentUser)
     return (
@@ -66,7 +64,7 @@ function UpdateProfile() {
         <Loader />
       </div>
     );
-  console.log(user);
+ 
 
   // Handler
   const handleUpdate = async (value: z.infer<typeof ProfileValidation>) => {
