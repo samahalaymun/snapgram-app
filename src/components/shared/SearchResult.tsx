@@ -1,5 +1,5 @@
 
-import React from 'react'
+
 import GridPostList from './GridPostList';
 import Loader from './Loader';
 export type SearchResultProps = {

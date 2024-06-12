@@ -1,11 +1,9 @@
 import GridPostList from "@/components/shared/GridPostList";
 import Loader from "@/components/shared/Loader";
 import Meta from "@/components/shared/Meta";
-import { useUserContext } from "@/context/AuthContext";
 import { useGetCurrentUser } from "@/lib/react-query/queriesAndMutations";
 import { Models } from "appwrite";
-import { log } from "console";
-import React from "react";
+
 
 function Saved() {
   const { data: currentUser } = useGetCurrentUser();

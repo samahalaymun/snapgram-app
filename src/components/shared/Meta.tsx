@@ -1,4 +1,4 @@
-import React from 'react'
+
 import {Helmet} from "react-helmet"
 
 function Meta({ title, homePage }:{title:string,homePage:boolean}) {

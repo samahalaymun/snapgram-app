@@ -6,7 +6,6 @@ import {
   useGetRecentPosts,
   useGetUsers,
 } from "@/lib/react-query/queriesAndMutations";
-import { Models } from "appwrite";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 

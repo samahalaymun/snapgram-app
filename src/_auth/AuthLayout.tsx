@@ -1,6 +1,4 @@
 import { useUserContext } from "@/context/AuthContext";
-import { Section } from "lucide-react";
-import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 function AuthLayout() {

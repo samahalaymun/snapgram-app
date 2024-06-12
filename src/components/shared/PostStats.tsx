@@ -9,23 +9,19 @@ import { Models } from "appwrite";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-type PostStateProps = {
-  post: Models.Document;
-  userId: string;
-};
 
-const PostStats = ({ post, userId }: PostStateProps) => {
+const PostStats = ({ post, userId }: any) => {
   const location = useLocation();
   const { mutate: likePost } = useLikePost();
   const { mutate: savePost } = useSavePost();
   const { mutate: deleteSavePost } = useDeleteSavedPost();
-  const likesList = post.likes.map((user: Models.Document) => user.$id);
+  const likesList = post?.likes.map((user: Models.Document) => user.$id);
   const [likes, setLikes] = useState<string[]>(likesList);
   const [isSaved, setIsSaved] = useState(false);
   const { data: currentUser } = useGetCurrentUser();
 
   const savedPostRecord = currentUser?.save.find(
-    (record: Models.Document) => record.post.$id === post.$id
+    (record: Models.Document) => record.post?.$id === post?.$id
   );
  
 
@@ -45,7 +41,7 @@ const PostStats = ({ post, userId }: PostStateProps) => {
       likesArray.push(userId);
     }
     setLikes(likesArray);
-    likePost({ postId: post.$id, likesArray });
+    likePost({ postId: post?.$id, likesArray });
   };
 
   const handleSavePost = (

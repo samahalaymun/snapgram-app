@@ -19,8 +19,10 @@ import {
   useUpdateUser,
 } from "@/lib/react-query/queriesAndMutations";
 import { ProfileValidation } from "@/lib/validation";
+import { IUpdateUser } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { log } from "console";
+
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import * as z from "zod";
@@ -30,16 +32,19 @@ function UpdateProfile() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user, setUser } = useUserContext();
-   const { data: currentUser } = useGetUserById(id || "");
-   const { mutateAsync: updateUser, isPending: isLoadingUpdate } =
-     useUpdateUser();
-     let userToUpdate={
-      File:[],
-      name:user.name,
-      username:user.username,
-      email:user.email,
-      bio:user.bio
-     }
+  const { data: currentUser } = useGetUserById(id || "");
+  const { mutateAsync: updateUser, isPending: isLoadingUpdate } =
+    useUpdateUser();
+  let userToUpdate: IUpdateUser = {
+    userId: user.id,
+    file: [],
+    name: user?.name,
+    username:user?.username,
+    email:user?.email,
+    bio: user?.bio,
+    imageUrl: currentUser?.imageUrl,
+    imageId: currentUser?.imageId,
+  };
   const form = useForm<z.infer<typeof ProfileValidation>>({
     resolver: zodResolver(ProfileValidation),
     defaultValues: {
@@ -48,12 +53,13 @@ function UpdateProfile() {
       username: user?.username,
       email: user?.email,
       bio: user?.bio || "",
+      
     },
     values: userToUpdate,
   });
   // Queries
+  console.log(currentUser);
  
-
   if (!currentUser)
     return (
       <div className="flex-center w-full h-full">
@@ -69,6 +75,8 @@ function UpdateProfile() {
       name: value.name,
       bio: value.bio,
       file: value.file,
+      email:value.email,
+      username:value.username,
       imageUrl: currentUser.imageUrl,
       imageId: currentUser.imageId,
     });

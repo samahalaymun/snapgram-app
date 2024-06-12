@@ -66,6 +66,7 @@ export const useGetRecentPosts = () => {
        const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
        return lastId;
      },
+     initialPageParam: null,
    });
 };
 
@@ -163,7 +164,7 @@ export const useGetUserPosts = (userId:string) => {
 export const useGetPosts = () => {
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
-    queryFn: getInfinitePosts,
+    queryFn: getInfinitePosts as any,
     getNextPageParam: (lastPage: any) => {
       // If there's no data, there are no more pages.
       if (lastPage && lastPage.documents.length === 0) {
@@ -174,6 +175,7 @@ export const useGetPosts = () => {
       const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
       return lastId;
     },
+    initialPageParam: null,
   });
 };
 

@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,9 +28,9 @@ const SignupForm = () => {
   const navigate = useNavigate();
   const { mutateAsync: createUserAccount, isPending: isCreatingAccount } =
     useCreateUserAccountMutation();
-  const { mutateAsync: signInAccount, isPending: isSigningInUser } =
+  const { mutateAsync: signInAccount, } =
     useSignInAccount();
-  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const { checkAuthUser } = useUserContext();
 
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),

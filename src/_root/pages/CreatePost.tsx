@@ -1,6 +1,6 @@
 import PostForm from "@/components/forms/PostForm";
 import Meta from "@/components/shared/Meta";
-import React from "react";
+
 
 function CreatePost() {
   return (
