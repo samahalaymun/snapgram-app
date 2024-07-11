@@ -1,3 +1,4 @@
+
 export const sidebarLinks = [
   {
     imgURL: "/assets/icons/home.svg",
@@ -24,6 +25,7 @@ export const sidebarLinks = [
     route: "/create-post",
     label: "Create Post",
   },
+  
 ];
 export const bottombarLinks = [
   {

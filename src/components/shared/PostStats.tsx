@@ -23,7 +23,7 @@ const PostStats = ({ post, userId }: any) => {
   const savedPostRecord = currentUser?.save.find(
     (record: Models.Document) => record.post?.$id === post?.$id
   );
- 
+  
 
   useEffect(() => {
     setIsSaved(!!savedPostRecord);
@@ -73,7 +73,7 @@ const PostStats = ({ post, userId }: any) => {
               ? "/assets/icons/liked.svg"
               : "/assets/icons/like.svg"
           }`}
-          className="cursor-pointer"
+          className="cursor-pointer hover:scale-110"
           alt="liked"
           width={20}
           height={20}
@@ -84,7 +84,7 @@ const PostStats = ({ post, userId }: any) => {
       <div className="flex gap-2">
         <img
           src={isSaved ? "/assets/icons/saved.svg" : "/assets/icons/save.svg"}
-          className="cursor-pointer"
+          className="cursor-pointer hover:scale-110"
           alt="saved"
           width={20}
           height={20}

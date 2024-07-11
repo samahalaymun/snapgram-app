@@ -8,11 +8,13 @@ export type IUpdateUser = {
   userId: string;
   name: string;
   bio: string;
-  username:string;
-  email:string;
+  username: string;
+  email: string;
   imageId: string;
   imageUrl: URL | string;
   file: File[];
+  following?: string[];
+  followers?: string[];
 };
 
 export type INewPost = {
@@ -31,6 +33,7 @@ export type IUpdatePost = {
   file: File[];
   location?: string;
   tags?: string;
+  
 };
 
 export type IUser = {
@@ -40,6 +43,8 @@ export type IUser = {
   email: string;
   imageUrl: string;
   bio: string;
+  following:string[];
+  followers:string[];
 };
 
 export type INewUser = {

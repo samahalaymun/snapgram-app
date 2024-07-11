@@ -107,7 +107,9 @@
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #7878a3;
   }
-
+.follow-container{
+  @apply fixed top-0 left-0 w-full h-full bg-dark-1/90 z-50 flex items-center justify-center
+}
   .common-container {
     @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar;
   }
@@ -188,7 +190,7 @@
 
   /* Bottom bar */
   .bottom-bar {
-    @apply z-50 flex-between w-full sticky bottom-0 rounded-t-[20px] bg-dark-2 px-5 py-4 md:hidden;
+    @apply z-40 flex-between w-full sticky bottom-0 rounded-t-[20px] bg-dark-2 px-5 py-4 md:hidden;
   }
 
   /* File uploader */
@@ -225,7 +227,9 @@
   .leftsidebar-link {
     @apply rounded-lg base-medium hover:bg-primary-500 transition;
   }
-
+    .leftsidebar-link-hover {
+    @apply invert-white scale-110;
+  }
   /* Post Card */
   .post-card {
     @apply bg-dark-2 rounded-3xl border border-dark-4 p-5 lg:p-7 w-full max-w-screen-sm;
@@ -237,12 +241,12 @@
 
   /* Topbar */
   .topbar {
-    @apply sticky top-0 z-50 md:hidden bg-dark-2 w-full;
+    @apply sticky top-0 z-40 md:hidden bg-dark-2 w-full;
   }
 
   /* User card */
   .user-card {
-    @apply flex-center flex-col gap-4 border border-dark-4 rounded-[20px] px-5 py-8;
+    @apply flex-start flex-row justify-between ;
   }
 }
 

@@ -9,7 +9,6 @@ type PostCardProps = {
 };
 function PostCard({ post }: PostCardProps) {
   const { user } = useUserContext();
-
  
   if (!post.creator) return;
   return (
@@ -23,7 +22,7 @@ function PostCard({ post }: PostCardProps) {
                 "/assets/icons/profile-placeholder.svg"
               }
               alt="creator"
-              className="w-12 lg:h-12 rounded-full"
+              className="w-12 lg:h-12 rounded-full "
             />
           </Link>
           <div className="flex flex-col">
@@ -51,19 +50,22 @@ function PostCard({ post }: PostCardProps) {
             alt="edit"
             width={20}
             height={20}
+            className="hover:scale-110"
           />
         </Link>
       </div>
       <Link to={`/posts/${post.$id}`}>
         <div className="small-medium lg:base-medium py-5">
           <p>{post.caption}</p>
-         { post.tags.length>0&&<ul className="flex gap-1 mt-2">
-            {post.tags.map((tag: string, index: Number) => (
-              <li key={`${index}${tag}`} className="text-light-3">
-                #{tag}
-              </li>
-            ))}
-          </ul>}
+          {post.tags.length > 0 && (
+            <ul className="flex gap-1 mt-2">
+              {post.tags.map((tag: string, index: Number) => (
+                <li key={`${index}${tag}`} className="text-light-3">
+                  #{tag}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <img
           src={post.imageUrl || "/assets/icons/profile-placeholder.svg"}

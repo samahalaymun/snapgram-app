@@ -17,6 +17,7 @@ import {
   Saved,
   UpdateProfile,
 } from "./_root/pages";
+import PreLoaderPage from "./components/shared/PreLoaderPage";
 
 const App = () => {
   return (

@@ -1,5 +1,11 @@
-import { ID, Query } from "appwrite";
-import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "../../types";
+import { ID, Models, Query } from "appwrite";
+import {
+  IUpdatePost,
+  INewPost,
+  INewUser,
+  IUpdateUser,
+  IUser,
+} from "../../types";
 import { appwriteConfig, account, databases, storage, avatars } from "./config";
 
 export async function createUserAccount(user: INewUser) {
@@ -71,7 +77,6 @@ export async function getCurrentUser() {
     );
 
     if (!currentUser) throw Error;
-    console.log(currentUser)
     return currentUser.documents[0];
   } catch (error) {
     console.log(error);
@@ -254,14 +259,18 @@ export async function deleteFile(fileId: string) {
 
 //===================================================GET RECENT POSTS
 export async function getRecentPosts({ pageParam }: { pageParam: number }) {
-    const queries: any[] = [Query.orderDesc("$createdAt"), Query.limit(2)];
-
-    if (pageParam) {
-      queries.push(Query.cursorAfter(pageParam.toString()));
-    }
-
+  const queries: any[] = [Query.orderDesc("$createdAt"), Query.limit(2)];
+  if (pageParam) {
+    
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
 
   try {
+    const user = await getCurrentUser();
+
+    if (user) {
+      queries.push(Query.equal("creator", [...user?.following, user.$id]));
+    }
     const posts = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.postCollectionId,
@@ -269,6 +278,8 @@ export async function getRecentPosts({ pageParam }: { pageParam: number }) {
     );
 
     if (!posts) throw Error;
+    console.log(posts);
+    
     return posts;
   } catch (error) {
     console.log(error);
@@ -502,6 +513,100 @@ export async function updateUser(user: IUpdateUser) {
     }
 
     return updatedUser;
+  } catch (error) {
+    console.log(error);
+  }
+}
+export async function searchUsers(searchTerm: string) {
+  try {
+    const users = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      [Query.search("name", searchTerm)]
+    );
+
+    if (!users) throw Error;
+
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ====================FOLLOW USER
+
+export async function followUSer(
+  followingId: string,
+  followerId: string,
+  followers: string[],
+  following: string[]
+) {
+  try {
+    const updatedfollwers = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      followerId,
+      {
+        followers: followers,
+      }
+    );
+    const updatedfollwing = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      followingId,
+      {
+        following: following,
+      }
+    );
+    if (!updatedfollwers) throw Error;
+
+    return updatedfollwers;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================== UNFOLLOW USER
+export async function unFollowUser(followsRecordId: string) {
+  try {
+    const statusCode = await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.followsCollectionId,
+      followsRecordId
+    );
+
+    if (!statusCode) throw Error;
+
+    return { status: "Ok" };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// ============================== GET FOLLOWINGS
+export async function getFollowings({
+  pageParam,
+  followings,
+}: {
+  pageParam: number;
+  followings:string[];
+}) {
+  const queries: any[] = [Query.limit(2)];
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
+
+  try {
+    queries.push(Query.equal("$id", [...followings]));
+    const followingList = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      queries
+    );
+
+    if (!followingList) throw Error;
+   
+    return followingList;
   } catch (error) {
     console.log(error);
   }

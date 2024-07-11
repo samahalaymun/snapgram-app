@@ -5,14 +5,37 @@ import {
   useQueryClient,
   useInfiniteQuery,
 } from "@tanstack/react-query";
-import { createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getUserById, getUserPosts, getUsers, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateUser } from "../appwrite/api";
+import {
+  createPost,
+  createUserAccount,
+  deletePost,
+  deleteSavedPost,
+  followUSer,
+  getCurrentUser,
+  getFollowings,
+  getInfinitePosts,
+  getPostById,
+  getRecentPosts,
+  getUserById,
+  getUserPosts,
+  getUsers,
+  likePost,
+  savePost,
+  searchPosts,
+  searchUsers,
+  signInAccount,
+  signOutAccount,
+  unFollowUser,
+  updatePost,
+  updateUser,
+} from "../appwrite/api";
 import { QUERY_KEYS } from "./queryKeys";
 
-export const useCreateUserAccountMutation=()=>{
-     return useMutation({
-       mutationFn: (user: INewUser) => createUserAccount(user),
-     });
-}
+export const useCreateUserAccountMutation = () => {
+  return useMutation({
+    mutationFn: (user: INewUser) => createUserAccount(user),
+  });
+};
 
 export const useSignInAccount = () => {
   return useMutation({
@@ -23,8 +46,7 @@ export const useSignInAccount = () => {
 
 export const useSignOutAccount = () => {
   return useMutation({
-    mutationFn: () =>
-      signOutAccount(),
+    mutationFn: () => signOutAccount(),
   });
 };
 
@@ -53,21 +75,20 @@ export const useUpdatePost = () => {
 };
 
 export const useGetRecentPosts = () => {
-   return useInfiniteQuery({
-     queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-     queryFn: getRecentPosts,
-     getNextPageParam: (lastPage: any) => {
-       // If there's no data, there are no more pages.
-       if (lastPage && lastPage.documents.length === 0) {
-         return null;
-       }
-
-       // Use the $id of the last document as the cursor.
-       const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
-       return lastId;
-     },
-     initialPageParam: null,
-   });
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+    queryFn: getRecentPosts,
+    getNextPageParam: (lastPage: any) => {
+      // If there's no data, there are no more pages.
+      if (lastPage && lastPage?.documents.length === 0) {
+        return null;
+      }
+      // Use the $id of the last document as the cursor.
+      const lastId = lastPage?.documents[lastPage.documents.length - 1].$id;
+      return lastId;
+    },
+    initialPageParam: null,
+  });
 };
 
 export const useLikePost = () => {
@@ -153,7 +174,7 @@ export const useDeletePost = () => {
     },
   });
 };
-export const useGetUserPosts = (userId:string) => {
+export const useGetUserPosts = (userId: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_USER_POSTS, userId],
     queryFn: () => getUserPosts(userId),
@@ -225,5 +246,75 @@ export const useUpdateUser = () => {
         queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
       });
     },
+  });
+};
+
+export const useSearchUsers = (searchTerm: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.SEARCH_USERS, searchTerm],
+    queryFn: () => searchUsers(searchTerm),
+    enabled: !!searchTerm,
+  });
+};
+
+export const useFollowUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      followingId,
+      followerId,
+      followersArray,
+      followingArray,
+    }: {
+      followingId: string;
+      followerId: string;
+      followersArray: string[];
+      followingArray: string[];
+    }) => followUSer(followingId, followerId, followersArray, followingArray),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      });
+    },
+  });
+};
+
+export const useUnFollowUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (followRecordId: string) => unFollowUser(followRecordId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+    },
+  });
+};
+
+export const useGetFollowingList = (followings: string[]) => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_FOLLOWING_LIST, followings],
+    queryFn: ({ pageParam }) =>
+      getFollowings({ pageParam: pageParam, followings: followings }),
+    getNextPageParam: (lastPage: any) => {
+      // If there's no data, there are no more pages.
+      if (lastPage && lastPage?.documents.length === 0) {
+        return null;
+      }
+
+      // Use the $id of the last document as the cursor.
+      const lastId = lastPage?.documents[lastPage.documents.length - 1].$id;
+      return lastId;
+    },
+    initialPageParam: null,
   });
 };

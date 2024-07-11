@@ -24,7 +24,8 @@ const SigninForm = () => {
   const navigate = useNavigate();
   const { mutateAsync: signInAccount, isPending: isSigningInUser } =
     useSignInAccount();
-  const { checkAuthUser } = useUserContext();
+  const { checkAuthUser} =
+    useUserContext();
   const form = useForm<z.infer<typeof SigninValidation>>({
     resolver: zodResolver(SigninValidation),
     defaultValues: {
@@ -32,12 +33,16 @@ const SigninForm = () => {
       password: "",
     },
   });
+
+
+
   async function onSubmit(values: z.infer<typeof SigninValidation>) {
-    console.log(values);
+   
     const session = await signInAccount({
       email: values.email,
       password: values.password,
     });
+     console.log(session);
     if (!session) {
       toast({
         title: "Login failed. Please try again.",
@@ -71,7 +76,6 @@ const SigninForm = () => {
           <p className="text-light-3 small-medium md:base-regular mt-2">
             Welcome back! Please enter your details.
           </p>
-
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-5 w-full mt-4"
